@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShell Display</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Custom Wallpaper Background -->
+    <div id="wallpaper-layer"></div>
+    
+    <!-- Header -->
+    <header class="display-header">
+        <div class="header-content">
+            <h1 class="club-name">GAME CLUB</h1>
+            <div class="current-time" id="current-time">00:00</div>
+        </div>
+        <div class="header-right">
+            <div class="connection-status" id="connection-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Подключение...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Zone Container -->
+    <main class="zones-container" id="zones-container">
+        <!-- Zones will be generated here -->
+    </main>
+
+    <!-- Settings Backdrop -->
+    <div class="settings-backdrop" id="settings-backdrop"></div>
+    
+    <!-- Settings Panel (Admin Mode) -->
+    <div class="settings-panel" id="settings-panel">
+        <h2>⚙️ Настройки</h2>
+        
+        <div class="settings-section">
+            <h3>🔐 Авторизация в SmartShell</h3>
+            <div class="setting-item">
+                <label>Телефон (логин):</label>
+                <input type="tel" id="api-login" placeholder="79998887766">
+            </div>
+            <div class="setting-item">
+                <label>Пароль:</label>
+                <input type="password" id="api-password" placeholder="Ваш пароль">
+            </div>
+            <div class="setting-item">
+                <label>Club ID (опционально):</label>
+                <input type="number" id="api-company-id" placeholder="4217">
+            </div>
+            <button class="btn btn-login" id="login-btn">🔑 Войти</button>
+            <div class="login-status" id="login-status"></div>
+        </div>
+
+        <div class="settings-section">
+            <h3>🎨 Фон</h3>
+            <div class="setting-item">
+                <label>Тип фона:</label>
+                <select id="bg-type">
+                    <option value="gradient">Градиент</option>
+                    <option value="image">Изображение (URL)</option>
+                    <option value="solid">Сплошной цвет</option>
+                </select>
+            </div>
+            <div class="setting-item" id="bg-image-setting" style="display:none;">
+                <label>URL изображения:</label>
+                <input type="text" id="bg-image-url" placeholder="https://...">
+            </div>
+            <div class="setting-item" id="bg-color-setting" style="display:none;">
+                <label>Цвет фона:</label>
+                <input type="color" id="bg-color" value="#1a1a2e">
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>🔄 Обновление</h3>
+            <div class="setting-item">
+                <label>Интервал (сек):</label>
+                <input type="number" id="refresh-interval" value="30" min="10" max="300">
+            </div>
+        </div>
+
+        <div class="settings-buttons">
+            <button class="btn btn-primary" id="save-settings">💾 Сохранить фон</button>
+            <button class="btn btn-secondary" id="close-settings">✖ Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Settings Toggle Button -->
+    <button class="settings-toggle" id="settings-toggle" title="Настройки" style="position: fixed !important; bottom: 30px !important; right: 30px !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #3b82f6 !important; border: 3px solid #fff !important; color: #fff !important; font-size: 28px !important; cursor: pointer !important; z-index: 10000 !important; display: flex !important; align-items: center !important; justify-content: center !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;">⚙️</button>
+    
+    <script>
+        // Wait for app to load, then attach click handler
+        function initSettingsBtn() {
+            var btn = document.getElementById('settings-toggle');
+            if (btn && window.smartshellDisplay) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.smartshellDisplay.directToggle) {
+                        window.smartshellDisplay.directToggle();
+                    }
+                }, true);
+            } else {
+                setTimeout(initSettingsBtn, 100);
+            }
+        }
+        initSettingsBtn();
+        
+        // Also init backdrop
+        function initBackdrop() {
+            var backdrop = document.getElementById('settings-backdrop');
+            if (backdrop && window.smartshellDisplay) {
+                backdrop.onclick = function() {
+                    if (window.smartshellDisplay.directToggle) {
+                        window.smartshellDisplay.directToggle();
+                    }
+                };
+            } else {
+                setTimeout(initBackdrop, 100);
+            }
+        }
+        initBackdrop();
+    </script>
+
+    <!-- PC Card Template (hidden) -->
+    <template id="pc-card-template">
+        <div class="pc-card" draggable="true">
+            <div class="pc-number"></div>
+            <div class="pc-status">
+                <span class="status-icon"></span>
+                <span class="status-text"></span>
+            </div>
+            <div class="pc-time">
+                <span class="time-label"></span>
+                <span class="time-value"></span>
+            </div>
+            <div class="pc-booking">
+                <div class="booking-badge">
+                    <span class="booking-icon">📅</span>
+                    <span class="booking-text"></span>
+                </div>
+            </div>
+            <div class="pc-drag-handle">⋮⋮</div>
+        </div>
+    </template>
+
+    <!-- Zone Template (hidden) -->
+    <template id="zone-template">
+        <div class="zone" data-zone-id="">
+            <div class="zone-header">
+                <span class="zone-icon"></span>
+                <h2 class="zone-name"></h2>
+                <div class="zone-stats">
+                    <span class="stat free">○ <span class="free-count">0</span> св.</span>
+                    <span class="stat busy">● <span class="busy-count">0</span> зан.</span>
+                </div>
+            </div>
+            <div class="zone-grid" data-zone-grid>
+                <!-- PC cards will be placed here -->
+            </div>
+        </div>
+    </template>
+
+    <script src="config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
