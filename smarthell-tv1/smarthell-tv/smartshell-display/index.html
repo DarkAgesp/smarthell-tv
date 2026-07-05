@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кибер Арена</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="wallpaper-layer"></div>
+  <div class="noise-layer"></div>
+
+  <button class="settings-toggle" id="settingsToggle" type="button">Настройки</button>
+
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-brand">
+        <div class="brand-mark">
+          <img class="brand-mark-image" id="brandLogo" src="/shared/%D0%90%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0.png" alt="Логотип клуба">
+        </div>
+        <div class="brand-copy">
+          <p class="brand-overline">Статус клуба</p>
+          <h1 id="clubName">Кибер Арена</h1>
+        </div>
+      </div>
+
+      <div class="hero-meta">
+        <div class="hero-clock" id="currentTime">00:00</div>
+        <div class="hero-date" id="currentDate">суббота, 4 июля</div>
+        <div class="hero-connection" id="apiStatus">Подключение...</div>
+      </div>
+    </header>
+
+    <main class="display-board">
+      <section class="zones-layout" id="zonesContainer">
+        <div class="loading-state">Загрузка хостов...</div>
+      </section>
+    </main>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+      <h2>Настройки экрана</h2>
+      <button class="close-button" id="closeSettings" type="button">Закрыть</button>
+    </div>
+
+    <div class="settings-content">
+      <div class="setting-group">
+        <label for="companyId">Company ID</label>
+        <input type="text" id="companyId" placeholder="ID компании">
+      </div>
+
+      <div class="setting-group">
+        <label for="phone">Телефон</label>
+        <input type="text" id="phone" placeholder="+7...">
+      </div>
+
+      <div class="setting-group">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" placeholder="Пароль">
+      </div>
+
+      <div class="setting-group">
+        <label for="refreshInterval">Интервал обновления, сек</label>
+        <input type="number" id="refreshInterval" min="10" max="300" step="5">
+      </div>
+
+      <div class="setting-group">
+        <label for="backgroundType">Фон</label>
+        <select id="backgroundType">
+          <option value="gradient">Градиент</option>
+          <option value="color">Цвет</option>
+          <option value="image">Изображение</option>
+        </select>
+      </div>
+
+      <div class="setting-group" id="backgroundColorGroup">
+        <label for="backgroundColor">Цвет фона</label>
+        <input type="color" id="backgroundColor" value="#08111f">
+      </div>
+
+      <div class="setting-group hidden" id="backgroundImageGroup">
+        <label for="backgroundImage">Изображение</label>
+        <input type="file" id="backgroundImage" accept="image/*">
+      </div>
+
+      <div class="setting-group">
+        <label for="logoImage">Логотип клуба</label>
+        <input type="file" id="logoImage" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <small class="setting-help">PNG, JPG, WEBP или SVG. Лучше квадрат 512x512 или больше. Для аккуратного вида лучше прозрачный PNG.</small>
+      </div>
+
+      <div class="setting-group">
+        <label for="palettePreset">Палитра</label>
+        <select id="palettePreset">
+          <option value="ice">Ice Arena</option>
+          <option value="ember">Ember Glow</option>
+          <option value="lime">Neon Lime</option>
+          <option value="sunset">Sunset Punch</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="accentColor">Акцент карточек</label>
+        <input type="color" id="accentColor" value="#5ae8ff">
+      </div>
+
+      <div class="setting-group">
+        <label for="surfaceColor">Цвет панелей</label>
+        <input type="color" id="surfaceColor" value="#0e234f">
+      </div>
+
+      <div class="setting-group">
+        <label for="textColor">Цвет текста</label>
+        <input type="color" id="textColor" value="#f6fbff">
+      </div>
+
+      <div class="setting-group">
+        <label for="cardScale">Масштаб карточек</label>
+        <input type="range" id="cardScale" min="0.85" max="1.35" step="0.05" value="1">
+      </div>
+
+      <div class="setting-group">
+        <label for="panelOpacity">Прозрачность панелей</label>
+        <input type="range" id="panelOpacity" min="0" max="95" value="72">
+      </div>
+
+      <div class="setting-group">
+        <label for="cardOpacity">Прозрачность карточек</label>
+        <input type="range" id="cardOpacity" min="0" max="100" value="58">
+      </div>
+
+      <div class="settings-actions">
+        <button class="secondary-button" id="loginBtn" type="button">Сохранить вход</button>
+        <button class="primary-button" id="saveSettings" type="button">Применить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-backdrop" id="settingsBackdrop"></div>
+
+  <script src="config.js"></script>
+  <script src="js/smartshell-sdk.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
